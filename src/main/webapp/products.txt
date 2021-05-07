@@ -1,0 +1,7 @@
+1;Nike Jordan;240
+2;Dell Monitor P2421D;550
+3;Sony digitaln kamera;340
+4;Philips Android TV 58;1550
+5;Philips Android TV 50;1150
+6;Sony Android TV 58;2550
+7;Sony Android TV 50;1550

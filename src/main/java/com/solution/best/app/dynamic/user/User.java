@@ -1,10 +1,14 @@
-package com.solution.best.app.dynamic.model;
+package com.solution.best.app.dynamic.user;
 
 import java.io.Serializable;
+import javax.inject.Inject;
 
 /**
- * Java BEAN
- * <p>
+ * Java Bean
+ * <li>1. Serializable
+ * <li>2. Podrazumijevani konstruktor
+ * <li>3. fields -> get set -> properties ili svojstva
+ *
  * @author Grupa1
  */
 public class User implements Serializable {
@@ -39,9 +43,5 @@ public class User implements Serializable {
 
     public boolean login() {
         return "admin".equals(username) && "admin".equals(password);
-    }
-
-    public String message() {
-        return login() ? "Logovan korisnik" : "Nije logovan korisnik";
     }
 }

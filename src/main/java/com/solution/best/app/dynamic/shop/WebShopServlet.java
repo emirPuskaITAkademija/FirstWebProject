@@ -17,6 +17,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ *
+ * <li> 1. HttpServlet
+ * <li>2. HttpServletRequest request
+ * <li>3. HttpServletResponse response
+ * <li>4. dogGet doPost -> na svaki F5 ili refresh u browser
+ * <li>5. init destroy -> 1 objekat koji živi u ServletContainer
+ * <li>6. ServletContext application = getServletContext();
+ *
+ * @author Grupa1
+ */
 @WebServlet(name = "WebShopServlet", urlPatterns = {"/shop"})
 public class WebShopServlet extends HttpServlet {
 
@@ -25,8 +36,8 @@ public class WebShopServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        ServletContext servletContext = getServletContext();
-        String path = servletContext.getRealPath("products.txt");
+        ServletContext application = getServletContext();
+        String path = application.getRealPath("products.txt");
         try (Scanner scanner = new Scanner(new FileReader(path))) {
             List<Product> products = new ArrayList<>();
             while (scanner.hasNext()) {
@@ -36,7 +47,7 @@ public class WebShopServlet extends HttpServlet {
                         tokenizer.nextToken(), new BigDecimal(tokenizer.nextToken()));
                 products.add(product);
             }
-            servletContext.setAttribute(PRODUCTS_KEY, products);
+            application.setAttribute(PRODUCTS_KEY, products);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -46,32 +57,32 @@ public class WebShopServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet WebShopServlet</title>");
+            out.println("<title>Raspoloživi proizvod</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Raspoloživi proizvodi</h1>");
-            ServletContext servletContext = getServletContext();
-            List<Product> products = (List<Product>) servletContext.getAttribute(PRODUCTS_KEY);
+            ServletContext application = getServletContext();
+            List<Product> products = (List<Product>) application.getAttribute(PRODUCTS_KEY);
             if (products != null && !products.isEmpty()) {
                 out.println("<table border='1' cellspacing='0' cellpadding=\"3\">");
-                out.println("<tr bgcolor='lightgray'><th>Ime proizvoda</th><th>Cijena</th><th>Dodaj u korpu</th></tr>");
+                out.println("<tr style='background-color:tomato; color:white;'><th>Ime proizvoda</th><th>Cijena</th><th>Dodaj u korpu</th></tr>");
                 for (Product product : products) {
                     out.println("<tr>");
                     out.println("<td>" + product.getName() + "</td>");
                     out.println("<td>" + product.getUnitPrice().toPlainString() + "</td>");
                     out.println("<td>");
-                    out.println("<form action='' method='POST'>");
-                    out.println("<input type='number' size='3'/>");
-                    out.println("<input type='submit' value='Dodaj'/>");
-                    out.println("</form>");
+                    out.println("<form action='cart' method='GET'>");
+                    out.println("<input type='number' size='3' name='quantity'/>");
+                    out.println("<input type='hidden' value='" + product.getId() + "' name='productId'/>");
                     out.println("</td>");
                     out.println("</tr>");
                 }
                 out.println("</table>");
+                out.println("<input type='submit' value='Dodaj'/>");
+                out.println("</form>");
             } else {
                 out.println("<h5> Trenutno nemamo proizvoda na stanju. Posjetite nas drugi put</h5>");
             }

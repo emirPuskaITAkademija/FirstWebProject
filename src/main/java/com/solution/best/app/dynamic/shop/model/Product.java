@@ -3,7 +3,8 @@ package com.solution.best.app.dynamic.shop.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Product implements Serializable{
+public class Product implements Serializable {
+
     private int id;
     private String name;
     private BigDecimal unitPrice;
@@ -40,6 +41,5 @@ public class Product implements Serializable{
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
-    
-    
+
 }

@@ -1,5 +1,6 @@
 package com.solution.best.app.dynamic;
 
+import com.solution.best.app.dynamic.ejb.LoginSessionBeanLocal;
 import com.solution.best.app.dynamic.model.User;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import javax.inject.Inject;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -21,6 +23,11 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginServlet extends HttpServlet {
 
     final static String KEY_FOR_USERS = "KORISNICI";
+    
+    @Inject
+    private LoginSessionBeanLocal loginSessionBeanLocal;
+    
+    
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -50,6 +57,8 @@ public class LoginServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
+            boolean isLogin = loginSessionBeanLocal.login(username, password);
+            
             User userFromRequest = new User(username, password);
             ServletContext servletContext = getServletContext();
             List<User> appUsers = (List<User>) servletContext.getAttribute(KEY_FOR_USERS);
